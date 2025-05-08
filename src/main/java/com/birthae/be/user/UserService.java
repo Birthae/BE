@@ -1,5 +1,6 @@
 package com.birthae.be.user;
 
+import com.birthae.be.common.exception.BizRuntimeException;
 import com.birthae.be.user.entity.User;
 import com.birthae.be.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,9 @@ public class UserService {
     private final JwtUtil jwtUtil;
 
     public User signup(String email, String password, String name, LocalDate birth) {
+        if (userRepository.findByEmail(email).isPresent()) {
+            throw new BizRuntimeException("이미 존재하는 이메일입니다.");
+        }
         User newUser = new User();
         newUser.setEmail(email);
         newUser.setPassword(passwordEncoder.encode(password));
@@ -27,14 +31,14 @@ public class UserService {
     }
 
     public Map<String, String> login(String email, String password) {
-        User member = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid username or password"));
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new BizRuntimeException("Invalid email or password"));
 
-        if (!passwordEncoder.matches(password, member.getPassword())) {
-            throw new IllegalArgumentException("Invalid username or password");
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new BizRuntimeException("Invalid email or password");
         }
 
-        String accessToken = jwtUtil.createToken(email, member.getRole().name());
+        String accessToken = jwtUtil.createToken(email, user.getRole().name());
 
         Map<String, String> tokens = new HashMap<>();
         tokens.put("accessToken", accessToken);
