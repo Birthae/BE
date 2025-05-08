@@ -1,5 +1,6 @@
 package com.birthae.be.user;
 
+import com.birthae.be.common.dto.ResponseMessage;
 import com.birthae.be.security.UserDetailsImpl;
 import com.birthae.be.user.dto.LoginRequestDto;
 import com.birthae.be.user.dto.SignupRequestDto;
@@ -25,26 +26,33 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity<User> signup(@RequestBody SignupRequestDto request) {
-        User createdMember = userService.signup(
+    public ResponseEntity<ResponseMessage> signup(@RequestBody SignupRequestDto request) {
+        User createdUser = userService.signup(
                 request.getEmail(),
                 request.getPassword(),
                 request.getName(),
                 request.getBirth()
         );
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdMember);
+
+        ResponseMessage responseMessage = ResponseMessage.builder()
+                .data(createdUser)
+                .statusCode(HttpStatus.CREATED.value())
+                .resultMessage("회원가입 성공")
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CREATED.value()).body(responseMessage);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> login(@RequestBody LoginRequestDto request, HttpServletResponse response) {
+    public ResponseEntity<ResponseMessage> login(@RequestBody LoginRequestDto request, HttpServletResponse response) {
         Map<String, String> tokens = userService.login(request.getEmail(), request.getPassword());
 
         // 액세스 토큰 쿠키 설정
         Cookie accessTokenCookie = new Cookie("accessToken", Base64.getUrlEncoder().encodeToString(tokens.get("accessToken").getBytes()));
         accessTokenCookie.setHttpOnly(true);
-        accessTokenCookie.setSecure(true); // HTTPS에서만 전송되도록 설정
+        accessTokenCookie.setSecure(true);
         accessTokenCookie.setPath("/");
-        accessTokenCookie.setMaxAge(60 * 60); // 1시간 유효
+        accessTokenCookie.setMaxAge(60 * 60); // 1시간
 
         // 응답에 쿠키 추가
         response.addCookie(accessTokenCookie);
@@ -53,19 +61,39 @@ public class UserController {
         HttpHeaders headers = new HttpHeaders();
         headers.add(JwtUtil.AUTHORIZATION_HEADER, tokens.get("accessToken"));
 
-        return ResponseEntity.ok().headers(headers).body(tokens);
+        ResponseMessage responseMessage = ResponseMessage.builder()
+                .data(tokens)
+                .statusCode(HttpStatus.OK.value())
+                .resultMessage("로그인 성공")
+                .build();
+
+        return ResponseEntity.ok().headers(headers).body(responseMessage);
     }
 
     @GetMapping("/me")
-    public ResponseEntity<User> getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<ResponseMessage> getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
-        return ResponseEntity.ok(user);
+
+        ResponseMessage responseMessage = ResponseMessage.builder()
+                .data(user)
+                .statusCode(HttpStatus.OK.value())
+                .resultMessage("유저 조회 성공")
+                .build();
+
+        return ResponseEntity.ok(responseMessage);
     }
 
     @Secured("ROLE_ADMIN")
     @GetMapping("/admin")
-    public ResponseEntity<User> getAdminInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<ResponseMessage> getAdminInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
-        return ResponseEntity.ok(user);
+
+        ResponseMessage responseMessage = ResponseMessage.builder()
+                .data(user)
+                .statusCode(HttpStatus.OK.value())
+                .resultMessage("유저 조회 성공")
+                .build();
+
+        return ResponseEntity.ok(responseMessage);
     }
 }
