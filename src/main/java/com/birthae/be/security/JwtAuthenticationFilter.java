@@ -2,7 +2,7 @@ package com.birthae.be.security;
 
 
 import com.birthae.be.user.dto.LoginRequestDto;
-import com.birthae.be.utils.jwt.JwtUtil;
+import com.birthae.be.utils.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;

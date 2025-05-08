@@ -1,9 +1,9 @@
-package com.birthae.be.config;
+package com.birthae.be.config.web;
 
 import com.birthae.be.security.JwtAuthenticationFilter;
 import com.birthae.be.security.JwtAuthorizationFilter;
 import com.birthae.be.security.UserDetailsServiceImpl;
-import com.birthae.be.utils.jwt.JwtUtil;
+import com.birthae.be.utils.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import java.io.IOException;
 
 @Configuration
-@EnableWebSecurity // Spring Security 지원을 가능하게 함
+@EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
 @RequiredArgsConstructor
 @Slf4j
