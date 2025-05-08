@@ -16,20 +16,20 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    public User signup(String username, String password) {
-        User newMember = new User(username, passwordEncoder.encode(password));
+    public User signup(String email, String password, String name) {
+        User newMember = new User(email, passwordEncoder.encode(password), name);
         return userRepository.save(newMember);
     }
 
-    public Map<String, String> login(String username, String password) {
-        User member = userRepository.findByUsername(username)
+    public Map<String, String> login(String email, String password) {
+        User member = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid username or password"));
 
         if (!passwordEncoder.matches(password, member.getPassword())) {
             throw new IllegalArgumentException("Invalid username or password");
         }
 
-        String accessToken = jwtUtil.createToken(username, member.getRole().name());
+        String accessToken = jwtUtil.createToken(email, member.getRole().name());
 
         Map<String, String> tokens = new HashMap<>();
         tokens.put("accessToken", accessToken);
