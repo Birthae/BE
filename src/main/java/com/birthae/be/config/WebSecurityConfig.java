@@ -1,11 +1,9 @@
-package com.birthae.be.config.web;
+package com.birthae.be.config;
 
 import com.birthae.be.security.JwtAuthenticationFilter;
 import com.birthae.be.security.JwtAuthorizationFilter;
 import com.birthae.be.security.UserDetailsServiceImpl;
 import com.birthae.be.utils.JwtUtil;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -25,6 +23,9 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Configuration
@@ -83,7 +84,13 @@ public class WebSecurityConfig {
         // Exception Handling 설정 (access denied 처리)
         http.exceptionHandling((exceptionHandling) ->
                 exceptionHandling
-                        .authenticationEntryPoint(new FailedAuthenticationEntryPoint()) // 인증 실패 시 처리
+                        .authenticationEntryPoint(new AuthenticationEntryPoint() {
+                            @Override
+                            public void commence(HttpServletRequest request, HttpServletResponse response,
+                                                 AuthenticationException authException) throws IOException, ServletException {
+                                throw authException;
+                            }
+                        })
         );
 
         // 필터 관리
@@ -91,17 +98,5 @@ public class WebSecurityConfig {
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
-    }
-
-    // 인가 실패인 경우
-    class FailedAuthenticationEntryPoint implements AuthenticationEntryPoint {
-
-        @Override
-        public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
-            response.setContentType("application/json");
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.getWriter().write("{\"error\": \"Unauthorized\", \"message\": \"Authentication is required to access this resource.\"}");
-            log.error("Unauthorized error: {}", authException.getMessage());
-        }
     }
 }

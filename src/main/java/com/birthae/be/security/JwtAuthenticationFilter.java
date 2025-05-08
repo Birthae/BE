@@ -1,6 +1,7 @@
 package com.birthae.be.security;
 
 
+import com.birthae.be.common.exception.BizRuntimeException;
 import com.birthae.be.user.dto.LoginRequestDto;
 import com.birthae.be.utils.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -37,7 +38,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             );
         } catch (IOException e) {
             log.error(e.getMessage());
-            throw new RuntimeException(e.getMessage());
+            throw new BizRuntimeException(e.getMessage());
         }
     }
 

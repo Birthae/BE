@@ -1,5 +1,6 @@
 package com.birthae.be.security;
 
+import com.birthae.be.common.exception.BizRuntimeException;
 import com.birthae.be.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -48,7 +49,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 setAuthentication(username, role);
             } catch (Exception e) {
                 log.error(e.getMessage());
-                return;
+                throw new BizRuntimeException(e.getMessage());
             }
         }
 

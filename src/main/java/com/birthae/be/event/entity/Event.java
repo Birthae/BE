@@ -16,7 +16,7 @@ public class Event extends CommonEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long eventId;
 
-    @Column(name = "userId", nullable = false)
+    @Column(name = "user_id", nullable = false)
     private Long userId;
 
     @Column(name = "title", nullable = false)
@@ -25,6 +25,6 @@ public class Event extends CommonEntity {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "imageUrl")
+    @Column(name = "image_url")
     private String imageUrl;
 }
