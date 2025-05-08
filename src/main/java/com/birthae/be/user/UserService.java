@@ -18,7 +18,11 @@ public class UserService {
     private final JwtUtil jwtUtil;
 
     public User signup(String email, String password, String name, LocalDate birth) {
-        User newUser = new User(email, passwordEncoder.encode(password), name, birth);
+        User newUser = new User();
+        newUser.setEmail(email);
+        newUser.setPassword(passwordEncoder.encode(password));
+        newUser.setName(name);
+        newUser.setBirth(birth);
         return userRepository.save(newUser);
     }
 

@@ -9,8 +9,8 @@ import java.time.LocalDate;
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor
+@AllArgsConstructor
 public class User extends CommonEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,13 +30,5 @@ public class User extends CommonEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role role;
-
-    public User(String email, String password, String name, LocalDate birth) {
-        this.email = email;
-        this.password = password;
-        this.name = name;
-        this.birth = birth;
-        this.role = Role.USER;
-    }
+    private Role role = Role.USER;
 }

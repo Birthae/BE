@@ -58,8 +58,8 @@ public class UserController {
 
     @GetMapping("/me")
     public ResponseEntity<User> getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        User member = userDetails.getUser();
-        return ResponseEntity.ok(member);
+        User user = userDetails.getUser();
+        return ResponseEntity.ok(user);
     }
 
     @Secured("ROLE_ADMIN")
