@@ -1,33 +1,34 @@
 package com.birthae.be.user.entity;
 
+import com.birthae.be.common.entity.CommonEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.time.LocalDate;
 
 @Entity
 @Data
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PUBLIC)
-public class User {
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
+@AllArgsConstructor
+public class User extends CommonEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long userId;
 
-    @Column(nullable = false, unique = true)
-    private String username;
+    @Column(name = "email", nullable = false, unique = true)
+    private String email;
 
-    @Column(nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
+
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @Column(name = "birth", nullable = false)
+    private LocalDate birth;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role role;
-
-    public User(String username, String password) {
-        this.username = username;
-        this.password = password;
-        this.role = Role.USER;
-    }
+    private Role role = Role.USER;
 }

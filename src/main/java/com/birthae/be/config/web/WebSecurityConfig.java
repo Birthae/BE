@@ -1,9 +1,9 @@
-package com.birthae.be.config;
+package com.birthae.be.config.web;
 
 import com.birthae.be.security.JwtAuthenticationFilter;
 import com.birthae.be.security.JwtAuthorizationFilter;
 import com.birthae.be.security.UserDetailsServiceImpl;
-import com.birthae.be.utils.jwt.JwtUtil;
+import com.birthae.be.utils.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import java.io.IOException;
 
 @Configuration
-@EnableWebSecurity // Spring Security 지원을 가능하게 함
+@EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
 @RequiredArgsConstructor
 @Slf4j
@@ -75,6 +75,7 @@ public class WebSecurityConfig {
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // resources 접근 허용 설정
                         .requestMatchers("/").permitAll() // 메인 페이지 요청 허가
                         .requestMatchers("/api/v1/user/**").permitAll() // '/api/v1/user/'로 시작하는 요청 모두 접근 허가
+                        .requestMatchers("/api/v1/event/**").permitAll() // '/api/v1/event/'로 시작하는 요청 모두 접근 허가
                         .requestMatchers("/api/v1/admin/**").hasRole("ADMIN") // '/api/v1/admin/'로 시작하는 요청은 ADMIN 권한 필요
                         .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );

@@ -1,11 +1,12 @@
 package com.birthae.be.user;
 
 import com.birthae.be.user.entity.User;
-import com.birthae.be.utils.jwt.JwtUtil;
+import com.birthae.be.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,20 +17,24 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    public User signup(String username, String password) {
-        User newMember = new User(username, passwordEncoder.encode(password));
-        return userRepository.save(newMember);
+    public User signup(String email, String password, String name, LocalDate birth) {
+        User newUser = new User();
+        newUser.setEmail(email);
+        newUser.setPassword(passwordEncoder.encode(password));
+        newUser.setName(name);
+        newUser.setBirth(birth);
+        return userRepository.save(newUser);
     }
 
-    public Map<String, String> login(String username, String password) {
-        User member = userRepository.findByUsername(username)
+    public Map<String, String> login(String email, String password) {
+        User member = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid username or password"));
 
         if (!passwordEncoder.matches(password, member.getPassword())) {
             throw new IllegalArgumentException("Invalid username or password");
         }
 
-        String accessToken = jwtUtil.createToken(username, member.getRole().name());
+        String accessToken = jwtUtil.createToken(email, member.getRole().name());
 
         Map<String, String> tokens = new HashMap<>();
         tokens.put("accessToken", accessToken);

@@ -4,7 +4,7 @@ import com.birthae.be.security.UserDetailsImpl;
 import com.birthae.be.user.dto.LoginRequestDto;
 import com.birthae.be.user.dto.SignupRequestDto;
 import com.birthae.be.user.entity.User;
-import com.birthae.be.utils.jwt.JwtUtil;
+import com.birthae.be.utils.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,17 +22,22 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/user")
 public class UserController {
-    private final UserService service;
+    private final UserService userService;
 
     @PostMapping("/signup")
     public ResponseEntity<User> signup(@RequestBody SignupRequestDto request) {
-        User createdMember = service.signup(request.getUsername(), request.getPassword());
+        User createdMember = userService.signup(
+                request.getEmail(),
+                request.getPassword(),
+                request.getName(),
+                request.getBirth()
+        );
         return ResponseEntity.status(HttpStatus.CREATED).body(createdMember);
     }
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody LoginRequestDto request, HttpServletResponse response) {
-        Map<String, String> tokens = service.login(request.getUsername(), request.getPassword());
+        Map<String, String> tokens = userService.login(request.getEmail(), request.getPassword());
 
         // 액세스 토큰 쿠키 설정
         Cookie accessTokenCookie = new Cookie("accessToken", Base64.getUrlEncoder().encodeToString(tokens.get("accessToken").getBytes()));
@@ -53,8 +58,8 @@ public class UserController {
 
     @GetMapping("/me")
     public ResponseEntity<User> getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        User member = userDetails.getUser();
-        return ResponseEntity.ok(member);
+        User user = userDetails.getUser();
+        return ResponseEntity.ok(user);
     }
 
     @Secured("ROLE_ADMIN")
