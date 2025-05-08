@@ -1,4 +1,4 @@
-package com.birthae.be.utils.jwt;
+package com.birthae.be.utils;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;

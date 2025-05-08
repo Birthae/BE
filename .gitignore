@@ -36,3 +36,5 @@ out/
 ### VS Code ###
 .vscode/
 .Ds_Store
+
+application-dev.yml

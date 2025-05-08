@@ -4,7 +4,7 @@ import com.birthae.be.security.UserDetailsImpl;
 import com.birthae.be.user.dto.LoginRequestDto;
 import com.birthae.be.user.dto.SignupRequestDto;
 import com.birthae.be.user.entity.User;
-import com.birthae.be.utils.jwt.JwtUtil;
+import com.birthae.be.utils.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

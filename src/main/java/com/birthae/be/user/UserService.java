@@ -1,7 +1,7 @@
 package com.birthae.be.user;
 
 import com.birthae.be.user.entity.User;
-import com.birthae.be.utils.jwt.JwtUtil;
+import com.birthae.be.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
