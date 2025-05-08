@@ -26,7 +26,12 @@ public class UserController {
 
     @PostMapping("/signup")
     public ResponseEntity<User> signup(@RequestBody SignupRequestDto request) {
-        User createdMember = userService.signup(request.getEmail(), request.getPassword(), request.getName());
+        User createdMember = userService.signup(
+                request.getEmail(),
+                request.getPassword(),
+                request.getName(),
+                request.getBirth()
+        );
         return ResponseEntity.status(HttpStatus.CREATED).body(createdMember);
     }
 
