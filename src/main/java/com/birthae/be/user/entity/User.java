@@ -4,6 +4,8 @@ import com.birthae.be.common.entity.CommonEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -23,14 +25,18 @@ public class User extends CommonEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "birth", nullable = false)
+    private LocalDate birth;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
 
-    public User(String email, String password, String name) {
+    public User(String email, String password, String name, LocalDate birth) {
         this.email = email;
         this.password = password;
         this.name = name;
+        this.birth = birth;
         this.role = Role.USER;
     }
 }

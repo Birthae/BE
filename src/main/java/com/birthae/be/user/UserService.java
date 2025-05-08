@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,9 +17,9 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    public User signup(String email, String password, String name) {
-        User newMember = new User(email, passwordEncoder.encode(password), name);
-        return userRepository.save(newMember);
+    public User signup(String email, String password, String name, LocalDate birth) {
+        User newUser = new User(email, passwordEncoder.encode(password), name, birth);
+        return userRepository.save(newUser);
     }
 
     public Map<String, String> login(String email, String password) {
