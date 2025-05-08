@@ -1,9 +1,13 @@
 package com.birthae.be.user.dto;
 
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class LoginRequestDto {
-    private String username;
+    private String email;
     private String password;
 }
