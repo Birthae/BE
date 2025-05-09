@@ -2,6 +2,7 @@ package com.birthae.be.event;
 
 import com.birthae.be.common.dto.ResponseMessage;
 import com.birthae.be.event.dto.CreateEventRequestDto;
+import com.birthae.be.event.dto.UpdateEventRequestDto;
 import com.birthae.be.event.entity.Event;
 import com.birthae.be.security.UserDetailsImpl;
 import com.birthae.be.user.entity.User;
@@ -68,6 +69,50 @@ public class EventController {
                 .statusCode(HttpStatus.OK.value())
                 .resultMessage("이벤트 조회 성공")
                 .build();
+        return ResponseEntity.ok(responseMessage);
+    }
+
+    @PatchMapping(value = "/{eventId}", consumes = {"multipart/form-data"})
+    public ResponseEntity<ResponseMessage> updateEvent(
+            @PathVariable("eventId") Long eventId,
+            @ModelAttribute UpdateEventRequestDto request,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        User user = userDetails.getUser();
+        String imageUrl = request.getImage() != null
+                ? s3Util.uploadFile(request.getImage(), "birthae/images/event")
+                : null;
+
+        Event updatedEvent = eventService.updateEvent(
+                eventId,
+                user.getUserId(),
+                request.getTitle(),
+                request.getDescription(),
+                imageUrl
+        );
+
+        ResponseMessage responseMessage = ResponseMessage.builder()
+                .data(updatedEvent)
+                .statusCode(HttpStatus.OK.value())
+                .resultMessage("이벤트 수정 성공")
+                .build();
+
+        return ResponseEntity.ok(responseMessage);
+    }
+
+    @DeleteMapping("/{eventId}")
+    public ResponseEntity<ResponseMessage> deleteEvent(
+            @PathVariable("eventId") Long eventId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        User user = userDetails.getUser();
+        eventService.deleteEvent(eventId, user.getUserId());
+
+        ResponseMessage responseMessage = ResponseMessage.builder()
+                .statusCode(HttpStatus.OK.value())
+                .resultMessage("이벤트 삭제 성공")
+                .build();
+
         return ResponseEntity.ok(responseMessage);
     }
 }
