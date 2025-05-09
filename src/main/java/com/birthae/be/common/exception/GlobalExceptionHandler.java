@@ -23,16 +23,15 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ResponseMessage> handleBizRuntimeException(BizRuntimeException e) {
         log.error("BizRuntime Error: {}", e.getMessage(), e);
 
-        int statusCode = HttpStatus.BAD_REQUEST.value();
         String resultMessage = "처리 중 오류가 발생하였습니다: " + e.getMessage();
 
         ResponseMessage responseMessage = ResponseMessage.builder()
-                .statusCode(statusCode)
+                .statusCode(Integer.parseInt(e.getErrorCode()))
                 .resultMessage(resultMessage)
                 .detailMessage(e.getMessage())
                 .build();
 
-        return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(statusCode));
+        return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(Integer.parseInt(e.getErrorCode())));
     }
 
     @ExceptionHandler(Exception.class)
