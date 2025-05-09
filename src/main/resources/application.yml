@@ -21,6 +21,11 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
 
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+
 s3:
   bucketName: ${AWS_S3_BUCKETNAME}
   region: ${AWS_S3_REGION}
